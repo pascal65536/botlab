@@ -458,6 +458,7 @@ if __name__ == "__main__":
 
 ### Логирование: Как вести логи работы бота для отладки
 
+```
 import logging
 import telebot
 import settings
@@ -494,5 +495,5 @@ def log_action(func):
             raise
 
     return wrapper
-
+```
 
