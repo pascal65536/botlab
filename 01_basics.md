@@ -207,7 +207,7 @@ print(response.json())
 
 **Используем Python**
 
-``
+```
 import requests
 
 token = "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
