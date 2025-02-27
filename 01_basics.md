@@ -155,24 +155,26 @@ GET-запросы используются для получения данны
 
 `123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11`
 
-2. Строка заканчивается ключом getMe
+2. Строка заканчивается ключом `getMe`
 
 Перейдите по этой ссылке и вам ответит сервер Телеграм. В ответе будет видна информация о вашем боте.
 
-`{`
-  `"ok": true,`
-  `"result": {`
-    `"id": 123456,`
-    `"is_bot": true,`
-    `"first_name": "Test",`
-    `"username": "Test",`
-    `"can_join_groups": true,`
-    `"can_read_all_group_messages": false,`
-    `"supports_inline_queries": false,`
-    `"can_connect_to_business": false,`
-    `"has_main_web_app": false`
-  `}`
-`}`
+```
+{
+  "ok": true,
+  "result": {
+    "id": 123456,
+    "is_bot": true,
+    "first_name": "Test",
+    "username": "Test",
+    "can_join_groups": true,
+    "can_read_all_group_messages": false,
+    "supports_inline_queries": false,
+    "can_connect_to_business": false,
+    "has_main_web_app": false
+  }
+}
+```
 
 **Используем Python**
 
@@ -205,63 +207,65 @@ print(response.json())
 
 **Используем Python**
 
-`import requests`
+``
+import requests
 
-`token = "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"`
-`key = "getUpdates"`
-`url = f"https://api.telegram.org/bot{token}/{key}"`
-`response = requests.get(url, timeout=30)`
-`print(response.json())`
+token = "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+key = "getUpdates"
+url = f"https://api.telegram.org/bot{token}/{key}"
+response = requests.get(url, timeout=30)
+print(response.json())
+```
 
-Вывод
+**Вывод**
 
 `{'ok': True, 'result': []}`
 
 Видно, что к боту в последнее время никто не обращался. Список result пуст. Напишите боту что-нибудь и проверьте, что получится.
 
-`{`
-    `"ok": true,`
-    `"result": [`
-        `{`
-            `"update_id": 111,`
-            `"message": {`
-                `"message_id": 1,`
-                `"from": {`
-                    `"id": 1234567890,`
-                    `"is_bot": false,`
-                    `"first_name": "User",`
-                    `"username": "username",`
-                    `"language_code": "ru",`
-                    `"is_premium": true`
-                `},`
-                `"chat": {`
-                    `"id": 1234567890,`
-                    `"first_name": "User",`
-                    `"username": "username",`
-                    `"type": "private"`
-                `},`
-                `"date": 1738335868,`
-                `"text": "/start",`
-                `"entities": [`
-                    `{`
-                        `"offset": 0,`
-                        `"length": 6,`
-                        `"type": "bot_command"`
-                    `}`
-                `]`
-            `}`
-        `}`
-    `]`
-`}`
+```
+{
+    "ok": true,
+    "result": [
+        {
+            "update_id": 111,
+            "message": {
+                "message_id": 1,
+                "from": {
+                    "id": 1234567890,
+                    "is_bot": false,
+                    "first_name": "User",
+                    "username": "username",
+                    "language_code": "ru",
+                    "is_premium": true
+                },
+                "chat": {
+                    "id": 1234567890,
+                    "first_name": "User",
+                    "username": "username",
+                    "type": "private"
+                },
+                "date": 1738335868,
+                "text": "/start",
+                "entities": [
+                    {
+                        "offset": 0,
+                        "length": 6,
+                        "type": "bot_command"
+                    }
+                ]
+            }
+        }
+    ]
+}
+```
 
 Теперь в списке result появилась информация о том, кто и что написал боту.
 
-В блоке message:
-
+**В блоке message:**
 - message_id - порядковый номер действия с ботом
 
-В блоке from:
-
+**В блоке from:**
 - id - Телеграм ID пользователя. Основное, что нужно, чтобы отправить сообщение пользователю.
 - first_name, last_name - Имя и фамилия пользователя
 - username - Username пользователя
@@ -278,13 +282,13 @@ print(response.json())
 
 Что здесь происходит
 
-1. К уже известной строке URL добавляются GET-параметры после ? следуют парами и разделяются &. Если в текстовом сообщении есть пробелы, то их нужно заменить на спецсимволы или +. Если встретятся вопросы или ампесанды, то их тоже нужно заменить.
+К уже известной строке URL добавляются GET-параметры после ? следуют парами и разделяются &. Если в текстовом сообщении есть пробелы, то их нужно заменить на спецсимволы или +. Если встретятся вопросы или ампесанды, то их тоже нужно заменить.
 
 `?chat_id=1234567890&text=Привет,+как+дела`
 
 Так можно отправить сообщение в качестве эксперимента, но организовывать работу бота таким образом нельзя.
 
-Используем Python
+## Используем Python
 
 ```
 import requests
@@ -304,7 +308,6 @@ print(response.json())
 POST-запросы используются для отправки данных на сервер, чтобы создать или обновить ресурс. Они могут изменять состояние сервера.
 
 Особенности
-
 - Данные передаются в теле запроса, а не в URL.
 - Более безопасно передавать конфиденциальную информацию, так как она не отображается в URL.
 - Пример: отправка формы с данными.
