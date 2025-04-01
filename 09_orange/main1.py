@@ -9,6 +9,10 @@ word = "Апельсинка"
 
 
 def append_anagrams(text):
+    """
+    Многозадачная функция:
+    Проверяет наличие слова и добавляет его в список
+    """
     if text in anagrams_lst:
         return False
     else:
@@ -23,6 +27,9 @@ def start_game(message):
 
 @bot.message_handler(func=lambda message: True)
 def anagrama_message(message):
+    """
+    Выделяем три основных блока программы
+    """
     # Ввод данных
     text = message.text
     # Обработка данных
