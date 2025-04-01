@@ -7,7 +7,7 @@ anagrams_lst = list()
 word = "Апельсинка"
 # Анаграмма с памятью и русским словарём
 
-with open("data/russian.txt", encoding="utf-8") as f:
+with open("russian.txt", encoding="utf-8") as f:
     filestr = f.read().split()
 
 
