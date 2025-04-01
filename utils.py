@@ -80,11 +80,42 @@ def can_append(text, word, russian):
     return True
 
 
-if __name__ == "__main__":
-    print(pythagoras(3, 4))  # Вывод 5.0
-    print(pythagoras(3, -4))  # Вывод 5.0
-    print(pythagoras(3, 0))  # Вывод 3.0
-    print(pythagoras(0, 0))  # Вывод 0.0
-    print(pythagoras(-2, 0))  # Вывод 2.0
-    print(pythagoras(-3, 5))  # Вывод 5.830951894845301
-    print(pythagoras(-13, -14))  # Вывод 19.1049731745428
+def generate_name(telegram_id):
+    colors = [
+        "Красный",
+        "Синий",
+        "Зеленый",
+        "Желтый",
+        "Фиолетовый",
+        "Оранжевый",
+        "Черный",
+        "Белый",
+        "Розовый",
+        "Серый",
+    ]
+    adjectives = [
+        "Смешной",
+        "Сильный",
+        "Умный",
+        "Быстрый",
+        "Мягкий",
+        "Храбрый",
+        "Тихий",
+        "Яркий",
+        "Доброжелательный",
+        "Ласковый",
+    ]
+    animals = [
+        "Кот",
+        "Собака",
+        "Птица",
+        "Заяц",
+        "Лев",
+        "Тигр",
+        "Медведь",
+        "Кролик",
+        "Черепаха",
+        "Лошадь",
+    ]
+    telegram_str = str(telegram_id)
+    return f"{colors[int(telegram_str[-3])]} {adjectives[int(telegram_str[-2])]} {animals[int(telegram_str[-1])]}"
