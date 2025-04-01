@@ -1,24 +1,15 @@
 from cachetools import TTLCache
-from functools import wraps
 
+cache = TTLCache(maxsize=100, ttl=1)
+print(cache)
 
-cache = TTLCache(maxsize=100, ttl=30)
-
-
-def cache_decorator(func):
-    @wraps(func)
-    def wrapper(message):
-        user_id = str(message.chat.id)
-        if user_id in cache:
-            return None
-        else:
-            result = func(message)
-            cache[user_id] = result
-            return result
-
-    return wrapper
-
-
-@cache_decorator
-def echo_message(message):
-    print(message)
+user_id = 1
+cache[user_id] = 'Hello, world!'
+i = 0
+while True:
+    if user_id in cache:
+        print(i, cache[user_id])
+    else:
+        print(i, 'Not found')
+        break
+    i += 1
