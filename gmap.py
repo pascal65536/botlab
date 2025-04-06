@@ -32,10 +32,11 @@ def get_user_dct(filename):
     return user_dct
 
 
-def get_map(lon, lat, zoom=12, types="map", pt=None):
+def get_map(lon, lat, zoom=12, types="map", pt=None, spn=0.01):
     map_params = {
         "ll": f"{lon},{lat}",
-        "z": f"{zoom}",
+        # "z": f"{zoom}",
+        "spn": f"{spn},{spn}",
         "l": types,
         "size": "650,450",
     }
@@ -94,8 +95,8 @@ def create_map_image(lon, lat, user_id):
     return filepath
 
 
-def create_map_image_buttons(user_id, lon=0, lat=0, zoom=12, types="map", pt=None):
-    map_image = get_map(lon, lat, zoom=zoom, types=types, pt=pt)
+def create_map_image_buttons(user_id, lon=0, lat=0, zoom=12, types="map", pt=None, spn=0.01):
+    map_image = get_map(lon, lat, zoom=zoom, types=types, pt=pt, spn=spn)
     filename = f"{user_id}_{lon}_{lat}.png"
     filepath = os.path.join(folder_name, filename)
     save_bytes_to_file(map_image, filepath)

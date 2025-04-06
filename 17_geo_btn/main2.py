@@ -22,32 +22,36 @@ user_dct = dict()
 
 @bot.callback_query_handler(func=lambda callback: True)
 def check_callback(callback):
-    try:
-        user_id = callback.from_user.id
-        user_dct.setdefault(user_id, dict())
-        print(user_dct[user_id])
+    user_id = callback.from_user.id
+    user_dct.setdefault(user_id, dict())
 
-        bot.answer_callback_query(callback.id)
-        key, value = callback.data.split("_")
-        if key == "coords":
-            if '+' in value:
-                delta = 0.01
-            elif '-' in value:
-                delta = -0.01
-            if 'lat' in value:
-                result = str(float(user_dct[user_id]["lat"]) + delta)
-                user_dct[user_id]["lat"] = result
-            elif 'lon' in value:
-                result = str(float(user_dct[user_id]["lon"]) + delta)
-                user_dct[user_id]["lon"] = result
-        else:
-            user_dct[user_id][key] = value
-        print(user_dct[user_id])
+    spn = user_dct[user_id]["spn"]
+    lon = float(user_dct[user_id]["lon"])
+    lat = float(user_dct[user_id]["lat"])
+    move_dct = {
+        "left": (str(lon - spn), str(lat)),
+        "right": (str(lon + spn), str(lat)),
+        "up": (str(lon), str(lat + spn)),
+        "down": (str(lon), str(lat - spn)),
+    }
 
-        send_map_with_buttons(user_id, user_dct)
-    except Exception as e:
-        print(f"Error processing callback: {e}")
+    print(user_dct[user_id])
 
+    bot.answer_callback_query(callback.id)
+    key, value = callback.data.split("_")
+    print(key, value)
+    if key == "types":
+        user_dct[user_id]["types"] = value
+    elif key == "zoom":
+        if value == "plus":
+            user_dct[user_id]["spn"] = user_dct[user_id]["spn"] / 2
+        elif value == "minus":
+            user_dct[user_id]["spn"] = user_dct[user_id]["spn"] * 2
+    elif key == "move":
+        user_dct[user_id]["lon"] = move_dct[value][0]
+        user_dct[user_id]["lat"] = move_dct[value][1]
+    print(user_dct[user_id])
+    send_map_with_buttons(user_id, user_dct)
 
 
 def send_map_with_buttons(user_id, user_dct):
@@ -56,50 +60,63 @@ def send_map_with_buttons(user_id, user_dct):
         InlineKeyboardButton,
         KeyboardButton,
     )
-    
+
     user_dct.setdefault(user_id, dict()).setdefault("types", "map")
-    user_dct.setdefault(user_id, dict()).setdefault("zoom", 14)   
-    user_dct.setdefault(user_id, dict()).setdefault("lat", "31.105141")   
-    user_dct.setdefault(user_id, dict()).setdefault("lon", "121.014223")   
+    user_dct.setdefault(user_id, dict()).setdefault("spn", 0.01)
+    user_dct.setdefault(user_id, dict()).setdefault("lat", "31.105141")
+    user_dct.setdefault(user_id, dict()).setdefault("lon", "121.014223")
     types = user_dct[user_id]["types"]
-    zoom = user_dct[user_id]["zoom"]
+    spn = user_dct[user_id]["spn"]
     lat = user_dct[user_id]["lat"]
-    lon = user_dct[user_id]["lon"]  
+    lon = user_dct[user_id]["lon"]
 
-    flnm = gmap.create_map_image_buttons(user_id, lat=lat, lon=lon, types=types, zoom=zoom)
-
-    keyboard = InlineKeyboardMarkup()
+    flnm = gmap.create_map_image_buttons(
+        user_id, lat=lat, lon=lon, types=types, spn=spn
+    )
+    map_lst = [
+        ("🗺️", "types_map"),
+        ("🌍", "types_sat"),
+        ("🗺️🚦", "types_map,trf"),
+        ("🌍🚦", "types_sat,trf"),
+    ]
+    zoom_lst = [
+        ("➕", "zoom_plus"),
+        ("🔽", "move_down"),
+        ("➖", "zoom_minus"),
+    ]
+    axis_lst = [
+        ("◀️", "move_left"),
+        ("🔼", "move_up"),
+        ("▶️", "move_right"),
+    ]
+    keyboard = InlineKeyboardMarkup(row_width=4)
     keyboard.add(
-        *[InlineKeyboardButton(i, callback_data=f'coords_{i}') for i in ["lat+", "lat-", "lon+", "lon-"]]
-    )        
+        *[InlineKeyboardButton(sign, callback_data=name) for sign, name in axis_lst]
+    )
     keyboard.add(
-        *[InlineKeyboardButton(i, callback_data=f'types_{i}') for i in ["map", "sat", "map,skl", "sat,skl", "map,trf", "sat,trf"]]
-    )    
-    # keyboard.add(
-    #     *[InlineKeyboardButton(str(i), callback_data=f'zoom_{i}') for i in range(0, 21)]
-    # )
+        *[InlineKeyboardButton(sign, callback_data=name) for sign, name in zoom_lst]
+    )
+    keyboard.add(
+        *[InlineKeyboardButton(sign, callback_data=name) for sign, name in map_lst]
+    )
     bot.send_photo(user_id, open(flnm, "rb"), reply_markup=keyboard)
-    
 
 
 @bot.message_handler(commands=["get_map", "get_points"])
 def commands_get(message):
-
     user = message.from_user
     types = message.text.strip("/")
     if types == "get_map":
         last_point = gmap.get_last_points(user.id, count=1)[0]
         user_dct.setdefault(user.id, dict()).setdefault("lat", last_point[-2])
-        user_dct.setdefault(user.id, dict()).setdefault("lon", last_point[-1])   
+        user_dct.setdefault(user.id, dict()).setdefault("lon", last_point[-1])
         send_map_with_buttons(user.id, user_dct)
-
-
     elif types == "get_points":
         last_points = gmap.get_last_points(user.id, count=10)
         points_lst = list()
         for point in last_points:
             points_lst.append(f"{point[0][:19]} {point[4]:>10}, {point[5]:>10}")
-        msg = '\n'.join(points_lst)
+        msg = "\n".join(points_lst)
         bot.send_message(message.chat.id, msg)
 
 
