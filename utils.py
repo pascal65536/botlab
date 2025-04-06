@@ -35,6 +35,47 @@ scrabble_dict = {
 }
 
 
+def generate_name(telegram_id):
+    colors = [
+        "Красный",
+        "Синий",
+        "Зеленый",
+        "Желтый",
+        "Фиолетовый",
+        "Оранжевый",
+        "Черный",
+        "Белый",
+        "Розовый",
+        "Серый",
+    ]
+    adjectives = [
+        "Смешной",
+        "Сильный",
+        "Умный",
+        "Быстрый",
+        "Мягкий",
+        "Храбрый",
+        "Тихий",
+        "Яркий",
+        "Доброжелательный",
+        "Ласковый",
+    ]
+    animals = [
+        "Кот",
+        "Пёс",
+        "Дельфин",
+        "Заяц",
+        "Лев",
+        "Тигр",
+        "Медведь",
+        "Кролик",
+        "Леопард",
+        "Конь",
+    ]
+    telegram_str = str(telegram_id)
+    return f"{colors[int(telegram_str[-3])]} {adjectives[int(telegram_str[-2])]} {animals[int(telegram_str[-1])]}"
+
+
 def calc_scores(anagram_lst):
     result = 0
     for word in anagram_lst:

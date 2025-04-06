@@ -1,13 +1,13 @@
 import os
 import logging
 import telebot
-import settings
 from telebot import types
-from datetime import datetime
+import settings
+import gmap
 
 
 bot = telebot.TeleBot(settings.API_TOKEN)
-# Запрашивает у пользователя геометку и ведёт лог
+# Запрашивает у пользователя геометку, ведет лог и возвращает карту с метками
 
 
 folder_name = "log"
@@ -27,10 +27,10 @@ def commands_start(message):
     geo_button = types.KeyboardButton("Отправить местоположение", request_location=True)
     markup.add(geo_button)
     user = message.from_user
+    msg = f"Привет! Я GEO-бот."
     if user.username:
-        msg = f"Привет, {user.username}! Я GEO-бот. Я сохраняю твои геометки. Нажми кнопку ниже, чтобы отправить свое местоположение."
-    else:
-        msg = f"Привет! Я GEO-бот. Я сохраняю твои геометки. Нажми кнопку ниже, чтобы отправить свое местоположение."
+        msg = f"Привет, {user.username}! Я GEO-бот."
+    msg += "Я сохраняю твои геометки. Нажми кнопку ниже, чтобы отправить свое местоположение."
     bot.send_message(message.chat.id, msg, reply_markup=markup)
 
 
@@ -43,6 +43,9 @@ def handle_location(message):
     bot.send_message(message.chat.id, msg)
     msg = f"{user.id};{user.username};{location.latitude};{location.longitude}"
     logging.info(msg)
+
+    flnm = gmap.create_map_image(location.longitude, location.latitude, user.id)
+    bot.send_photo(message.chat.id, open(flnm, "rb"))
 
 
 # Обработка текстовых сообщений

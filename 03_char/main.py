@@ -6,6 +6,7 @@ from behoof_local import save_json, load_json
 bot = telebot.TeleBot(settings.API_TOKEN)
 # Игра виселица
 
+
 @bot.message_handler(commands=["start"])
 def start_game(message):
     bot.send_message(

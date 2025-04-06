@@ -7,7 +7,6 @@ import os
 import json
 
 
-
 def load_json(folder_name_lst, file_name, default={}):
     """
     Функция загружает данные из JSON-файла. Если указанный каталог
@@ -45,4 +44,3 @@ def save_json(folder_name_lst, file_name, save_dct):
     filename = os.path.join(folder_name, file_name)
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(save_dct, f, ensure_ascii=False, indent=4)
-

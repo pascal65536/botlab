@@ -1,6 +1,7 @@
 import telebot
 import settings
 from utils import can_append, helper
+
 # Избавились от функций, убрав их в utils.py
 
 
@@ -30,7 +31,7 @@ def start_game(message):
 def anagrama_message(message):
     """
     Выделяем три основных блока программы
-    """    
+    """
     # Ввод данных
     text = message.text
     # Обработка данных

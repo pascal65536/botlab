@@ -17,10 +17,10 @@ def help_game(message):
 def start_game(message):
     username = message.from_user.username
     commands_dct[message.chat.id] = list()
-    msg = f"Привет {username}. Я буду запоминать все, что ты мне напишешь, ",
+    msg = (f"Привет {username}. Я буду запоминать все, что ты мне напишешь, ",)
     msg += "а по команде /help я покажу тебе всё, что я запомнил."
     bot.send_message(message.chat.id, msg)
-    
+
 
 @bot.message_handler(func=lambda message: True)
 def commands_message(message):

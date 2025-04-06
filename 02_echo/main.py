@@ -4,7 +4,8 @@ import settings
 bot = telebot.TeleBot(settings.API_TOKEN)
 # Эхо-бот
 
-@bot.message_handler(commands=['start'])
+
+@bot.message_handler(commands=["start"])
 def send_welcome(message):
     bot.send_message(message.chat.id, "Привет! Я эхо-бот. Напиши мне что-нибудь.")
 

@@ -9,6 +9,10 @@ from behoof_local import save_json, load_json
 from utils import generate_name
 
 
+bot = telebot.TeleBot(settings.API_TOKEN)
+# Запрашивает у пользователя геометку и сохраняет JSON в персональную папку
+
+
 folder_name = "log"
 if not os.path.exists(folder_name):
     os.mkdir(folder_name)
@@ -18,9 +22,6 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
-
-bot = telebot.TeleBot(settings.API_TOKEN)
-# Запрашивает у пользователя геометку и сохраняет JSON в персональную папку
 
 
 # Декоратор для логирования

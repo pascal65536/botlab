@@ -33,7 +33,7 @@ def can_append(text, word, russian):
     Однозначная функция
     Проверяет возможность добавления слова в список
     Добавлять будем в другом месте
-    """        
+    """
     if russian and text.upper() not in russian:
         return False
     elif len(set(text.lower()) - set(word.lower())) != 0:
@@ -60,7 +60,7 @@ def start_game(message):
 def anagrama_message(message):
     """
     Выделяем три основных блока программы
-    """    
+    """
     # Ввод данных
     text = message.text
     # Обработка данных
