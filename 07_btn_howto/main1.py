@@ -16,7 +16,9 @@ bot = telebot.TeleBot(settings.API_TOKEN)
 @bot.message_handler(commands=["start"])
 def start(message):
     msg = "Вы вызвали start"
-    location_btn = KeyboardButton(text="Отправить местоположение", request_location=True)
+    location_btn = KeyboardButton(
+        text="Отправить местоположение", request_location=True
+    )
     contact_btn = KeyboardButton(text="Отправить контакт", request_contact=True)
     reply_markup = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     reply_markup.add(location_btn, contact_btn)

@@ -1,12 +1,28 @@
-import requests
-from io import BytesIO
 import os
 import csv
+import hashlib
+import requests
+from io import BytesIO
 
 
 folder_name = "images"
 if not os.path.exists(folder_name):
     os.mkdir(folder_name)
+
+
+def calculate_md5(file_path):
+    hash_md5 = hashlib.md5()
+    with open(file_path, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
+
+
+def str_to_md5(string):
+    dict_bytes = string.encode("utf-8")
+    hash_md5 = hashlib.md5()
+    hash_md5.update(dict_bytes)
+    return hash_md5.hexdigest()
 
 
 def get_user_dct(filename):
@@ -95,10 +111,16 @@ def create_map_image(lon, lat, user_id):
     return filepath
 
 
-def create_map_image_buttons(user_id, lon=0, lat=0, zoom=12, types="map", pt=None, spn=0.01):
-    map_image = get_map(lon, lat, zoom=zoom, types=types, pt=pt, spn=spn)
-    filename = f"{user_id}_{lon}_{lat}.png"
+def create_map_image_buttons(
+    user_id, lon=0, lat=0, zoom=12, types="map", pt=None, spn=0.01
+):
+    local_str = f"{lon[:6]}_{lat[:6]}_{zoom}_{types}_{pt}_{spn:.6f}"
+    filename = f"{str_to_md5(local_str)}.png"
     filepath = os.path.join(folder_name, filename)
+    # if os.path.exists(filepath):
+    #     print(f'cashed {filename}')
+    #     return filepath
+    map_image = get_map(lon, lat, zoom=zoom, types=types, pt=pt, spn=spn)
     save_bytes_to_file(map_image, filepath)
     return filepath
 
