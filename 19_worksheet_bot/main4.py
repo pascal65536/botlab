@@ -59,8 +59,10 @@ def commands_start(message):
 
     user = message.from_user
     user_id = str(user.id)
-    user_dct.setdefault(user_id, dict())
+    user_dct[user_id] = dict()
     save_json(user_dct)
+    status_dct[user_id] = None
+
     msg = f"Привет, я эхо-бот. Не простой, а очень любопытный!"
     bot.send_message(user_id, msg, reply_markup=rk_remove())
     send_welcome(user_id)
@@ -69,9 +71,15 @@ def commands_start(message):
 # Обработка текстовых сообщений
 @bot.message_handler(func=lambda message: True, content_types=["text"])
 def echo_all(message):
+    print(message.from_user.id, message.text)
+    
     user_id = str(message.from_user.id)
+    status_dct.setdefault(user_id, status_lst[0])
+
     if status_dct.get(user_id) == "ok":
         bot.reply_to(message, message.text)
+    elif status_dct[user_id] is None:
+        send_welcome(user_id)        
     else:
         user_dct.setdefault(user_id, dict()).setdefault(status_dct[user_id], None)
         user_dct[user_id][status_dct[user_id]] = message.text

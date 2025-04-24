@@ -60,7 +60,9 @@ def commands_start(message):
     from telebot.types import ReplyKeyboardRemove as rk_remove
 
     user = message.from_user
-    user_dct.setdefault(str(user.id), default_dct)
+    user_dct[str(user.id)] = default_dct
+    status_dct[str(user.id)] = None
+
     msg = f"Привет! Я Анкета-бот. Мне нужны твои <del>документы, одежда и мотоцикл</del> фамилия, имя и возраст."
     bot.send_message(message.chat.id, msg, reply_markup=rk_remove(), parse_mode="html")
     send_anketa(user.id)
@@ -69,11 +71,17 @@ def commands_start(message):
 # Обработка текстовых сообщений
 @bot.message_handler(func=lambda message: True, content_types=["text"])
 def echo_all(message):
+    print(message.from_user.id, message.text)
+    
     user_id = str(message.from_user.id)
     username = message.from_user.username
     text = message.text
     if is_ready(user_id):
         bot.reply_to(message, text)
+        return
+
+    if status_dct.get(str(user_id)) is None:
+        send_anketa(user_id)    
         return
 
     human_status = translation[status_dct.get(str(user_id))]

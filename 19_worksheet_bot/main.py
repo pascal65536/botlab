@@ -51,6 +51,8 @@ def handle_location(message):
 # Обработка текстовых сообщений
 @bot.message_handler(func=lambda message: True, content_types=["text"])
 def echo_all(message):
+    print(message.from_user.id, message.text)
+    
     user_id = str(message.from_user.id)
     if status_dct[user_id] == "ok":
         bot.reply_to(message, message.text)

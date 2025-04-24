@@ -33,18 +33,23 @@ def commands_start(message):
 
     user = message.from_user
     user_id = str(user.id)
+    status_dct.setdefault(user_id, status_lst[0])
+    status_dct[user_id] = status_lst[0]
 
-    msg = f"Привет, я эхо-бот. Не простой, а очень любопытный!"
+    msg = f"Привет, я эхо-бот. Не простой, а очень любопытный и больной!"
     bot.send_message(user_id, msg, reply_markup=rk_remove())
 
-    status_dct[user_id] = status_lst[0]
     send_welcome(user_id, status_dct[user_id])
 
 
 # Обработка текстовых сообщений
 @bot.message_handler(func=lambda message: True, content_types=["text"])
 def echo_all(message):
+    print(message.from_user.id, message.text)
+    
     user_id = str(message.from_user.id)
+    status_dct.setdefault(user_id, status_lst[0])
+
     if status_dct[user_id] == "ok":
         bot.reply_to(message, message.text)
     else:
