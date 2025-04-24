@@ -3,6 +3,7 @@ import time
 
 cache = TTLCache(maxsize=100, ttl=10)
 print(cache)
+# pip install cachetools
 
 user_id = 1
 cache[user_id] = "Hello, world!"

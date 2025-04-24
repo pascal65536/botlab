@@ -3,11 +3,10 @@ import asyncio
 import settings
 
 
-# Замените 'YOUR_BOT_TOKEN' на токен вашего бота
 TOKEN = settings.API_TOKEN
-CHAT_ID = (
-    settings.root
-)  # Замените на ID чата или пользователя, куда вы хотите отправить сообщения
+CHAT_ID = settings.root
+# Пример асинхронного кода
+# pip install aiohttp asyncio
 
 
 async def send_message(session, message):

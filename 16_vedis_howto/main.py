@@ -3,6 +3,9 @@ import json
 import random
 
 
+# pip install vedis
+
+
 db = Vedis("user.db")
 if "user" in db:
     user = json.loads(db["user"].decode())

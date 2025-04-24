@@ -1,3 +1,8 @@
+# Copyright (C) 2020-2025 . Sergey V. Pakhtusov (pascal65536@gmail.com)
+# Module for Yandex Maps API
+# https://github.com/pascal65536/behoof
+
+
 import os
 import csv
 import hashlib
